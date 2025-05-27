@@ -14,6 +14,7 @@ const SociologyTest = () => {
   const [result, setResult] = useState<DetailedResult | null>(null);
   const [showResult, setShowResult] = useState(false);
   const [shuffledQuestions, setShuffledQuestions] = useState(questions);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
   const questionsPerPage = 7;
   const totalPages = Math.ceil(questions.length / questionsPerPage);
@@ -77,6 +78,7 @@ const SociologyTest = () => {
 
     if (currentPage < totalPages - 1) {
       setCurrentPage(currentPage + 1);
+      setCurrentQuestionIndex(0);
     } else {
       // 마지막 페이지 완료 - 결과 계산
       const allAnswers: Answer[] = Object.entries(pageAnswers).map(([questionId, value]) => ({
@@ -94,6 +96,7 @@ const SociologyTest = () => {
   const prevPage = () => {
     if (currentPage > 0) {
       setCurrentPage(currentPage - 1);
+      setCurrentQuestionIndex(0);
     }
   };
 
@@ -105,6 +108,7 @@ const SociologyTest = () => {
     setResult(null);
     setShowResult(false);
     setShuffledQuestions(shuffleArray(questions));
+    setCurrentQuestionIndex(0);
   };
 
   const shareResult = () => {
@@ -326,10 +330,13 @@ const SociologyTest = () => {
             </div>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* 7개 질문 동시 표시 */}
+            {/* 한 번에 하나의 질문만 표시 */}
             <div className="space-y-8">
-              {currentPageQuestions.map((question, index) => (
-                <div key={question.id} className="border-2 border-dashed border-gray-300 p-6 rounded-lg">
+              {currentPageQuestions.slice(0, currentQuestionIndex + 1).map((question, index) => (
+                <div
+                  key={question.id + '-' + index}
+                  className="border-2 border-dashed border-gray-300 p-6 rounded-lg"
+                >
                   <div className="flex items-start gap-4 mb-4">
                     <div className="text-2xl font-bold">Q.</div>
                     <div className="flex-1">
@@ -341,7 +348,6 @@ const SociologyTest = () => {
                       </h3>
                     </div>
                   </div>
-
                   {/* 5점 척도 선택 */}
                   <div className="space-y-3">
                     <div className="flex justify-between text-xs text-gray-500">
@@ -349,12 +355,20 @@ const SociologyTest = () => {
                       <span>매우 그렇다</span>
                     </div>
                     <div className="flex justify-between gap-2">
-                      
                       {[1, 2, 3, 4, 5].map((value) => (
                         <button
                           key={value}
-                          onClick={() => handleAnswer(question.id, value)}
-                          className={`w-12 h-12 rounded-full border-2  transition-all ${
+                          onClick={() => {
+                            handleAnswer(question.id, value);
+                            // 마지막 질문이 아니면 다음 질문 추가
+                            if (
+                              index === currentQuestionIndex &&
+                              currentQuestionIndex < currentPageQuestions.length - 1
+                            ) {
+                              setCurrentQuestionIndex(currentQuestionIndex + 1);
+                            }
+                          }}
+                          className={`w-12 h-12 rounded-full border-2 ${
                             pageAnswers[question.id] === value
                               ? `text-white ${bgColors[value-1]} ${borderColors[value-1]} border-solid`
                               : 'border-gray-400 hover:border-black border-dashed'
@@ -364,7 +378,6 @@ const SociologyTest = () => {
                         </button>
                       ))}
                     </div>
-        
                   </div>
                 </div>
               ))}
