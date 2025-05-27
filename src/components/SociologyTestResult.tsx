@@ -155,16 +155,21 @@ const SociologyTestResult = () => {
               </div>
             </div>
             {/* 관계 */}
-            <div className="border-2 border-dashed border-gray-300 p-6 rounded-lg">
-              <h3 className="text-xl font-bold text-black mb-4">👥 인간관계</h3>
-              <div className="space-y-3">
+            <div className="flex flex-col gap-4">
+              <div className="bg-green-100 border-l-4 border-green-500 p-4 rounded-lg flex items-center">
+                <span className="text-2xl mr-3">🤝</span>
                 <div>
-                  <span className="text-sm font-semibold">💕 잘 맞는 타입: </span>
-                  <span className="text-sm">{result.relationships.bestMatch}</span>
+                  <div className="font-bold text-green-700">잘 맞는 타입</div>
+                  <div className="text-green-800">찰떡궁합! 이런 타입과 함께라면 시너지 폭발!</div>
+                  <div className="text-green-600 font-semibold mt-1">{result.relationships.bestMatch}</div>
                 </div>
+              </div>
+              <div className="bg-red-100 border-l-4 border-red-500 p-4 rounded-lg flex items-center">
+                <span className="text-2xl mr-3">⚡️</span>
                 <div>
-                  <span className="text-sm font-semibold">⚡ 부딪힐 수 있는 타입: </span>
-                  <span className="text-sm">{result.relationships.worstMatch}</span>
+                  <div className="font-bold text-red-700">부딪힐 수 있는 타입</div>
+                  <div className="text-red-800">티키타카가 필요! 이런 타입과는 가끔 충돌할 수도?</div>
+                  <div className="text-red-600 font-semibold mt-1">{result.relationships.worstMatch}</div>
                 </div>
               </div>
             </div>
