@@ -275,7 +275,7 @@ const SociologyTest = () => {
               </Button>
               
               <div className="text-sm text-gray-500">
-                {currentPageQuestions.filter(q => pageAnswers[q.id]).length} / {currentPageQuestions.length} 완료
+                {currentPageQuestions.filter(q => pageAnswers[q.id]).length} / {currentPageQuestions.length}
               </div>
               
               <Button 
