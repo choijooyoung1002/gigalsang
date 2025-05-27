@@ -48,7 +48,7 @@ const SociologyTestResult = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-white">
-        <div className="text-4xl animate-bounce mb-4">두구두구두구...</div>
+        <div className="text-4xl animate-bounce mb-4">자세한 내용은 4층 창체부로...</div>
         <div className="w-16 h-16 border-4 border-dashed border-gray-400 rounded-full animate-spin"></div>
       </div>
     );
@@ -183,16 +183,17 @@ const SociologyTestResult = () => {
               </div>
             </div>
             <div className="flex gap-4 pt-4">
+            
               <Button 
                 onClick={() => window.location.href = '/'}
-                className="flex-1 bg-black text-white border-2 border-dashed border-black text-lg font-bold hover:bg-white hover:text-black transition-all"
+                className="flex-1 border-2 border-dashed border-black bg-white text-black hover:bg-black hover:text-white"
               >
                 <RotateCcw className="w-4 h-4 mr-2" />
                 다시 테스트
               </Button>
               <Button 
                 onClick={shareResult}
-                className="flex-1 border-2 border-dashed border-black text-black hover:bg-black hover:text-white"
+                className="flex-1 bg-black text-white border-2 border-dashed border-black text-lg font-bold hover:bg-white hover:text-black transition-all"
               >
                 <Share2 className="w-4 h-4 mr-2" />
                 결과 공유하기
