@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { questions, calculateDetailedResult, type Answer, type DetailedResult } from '@/data/newSociologyTest';
 import { Share2, RotateCcw, ArrowRight, ArrowLeft } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
 
 const SociologyTest = () => {
   const [started, setStarted] = useState(false);
@@ -34,6 +35,10 @@ const SociologyTest = () => {
     "border-red-600"
   ];
 
+  const questionRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  const navigate = useNavigate();
+
   // 질문을 랜덤하게 섞는 함수
   const shuffleArray = (array: any[]) => {
     const shuffled = [...array];
@@ -47,6 +52,15 @@ const SociologyTest = () => {
   useEffect(() => {
     setShuffledQuestions(shuffleArray(questions));
   }, []);
+
+  useEffect(() => {
+    if (questionRefs.current[currentQuestionIndex]) {
+      questionRefs.current[currentQuestionIndex].scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
+  }, [currentQuestionIndex]);
 
   const currentPageQuestions = shuffledQuestions.slice(
     currentPage * questionsPerPage, 
@@ -87,9 +101,12 @@ const SociologyTest = () => {
       }));
       
       const testResult = calculateDetailedResult(allAnswers);
-      setResult(testResult);
-      setAnswers(allAnswers);
-      setShowResult(true);
+      // 결과를 base64로 인코딩하여 쿼리스트링으로 넘김 -> 점수만 넘기기
+      const e = testResult.detailedScores.empathy;
+      const c = testResult.detailedScores.conflict;
+      const s = testResult.detailedScores.structure;
+      const i = testResult.detailedScores.innovation;
+      navigate(`/result?e=${e}&c=${c}&s=${s}&i=${i}`);
     }
   };
 
@@ -335,6 +352,7 @@ const SociologyTest = () => {
               {currentPageQuestions.slice(0, currentQuestionIndex + 1).map((question, index) => (
                 <div
                   key={question.id + '-' + index}
+                  ref={el => questionRefs.current[index] = el}
                   className="border-2 border-dashed border-gray-300 p-6 rounded-lg"
                 >
                   <div className="flex items-start gap-4 mb-4">
